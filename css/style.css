@@ -1,0 +1,274 @@
+:root {
+  --color-bg: #faf6f2;
+  --color-card: #ffffff;
+  --color-text: #4a3f3a;
+  --color-text-soft: #8a7a72;
+  --color-accent: #c98b8b;
+  --color-accent-soft: #f1dede;
+  --color-line: #ece2dc;
+  --font-serif: 'Noto Serif KR', serif;
+  --font-display: 'Cormorant Garamond', serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #ece5df;
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 480px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--color-bg);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.demo-banner {
+  background: var(--color-accent);
+  color: #fff;
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  padding: 6px 8px;
+}
+
+/* Hero */
+.hero {
+  padding: 72px 24px 56px;
+  text-align: center;
+  background: linear-gradient(180deg, #f6ece7 0%, var(--color-bg) 100%);
+}
+
+.hero-eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  color: var(--color-accent);
+  margin: 0 0 18px;
+}
+
+.hero-names {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 3rem;
+  margin: 0 0 20px;
+  color: var(--color-text);
+}
+
+.hero-names .amp {
+  color: var(--color-accent);
+  font-style: italic;
+  margin: 0 8px;
+}
+
+.hero-date {
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text-soft);
+  margin: 0 0 6px;
+}
+
+.hero-venue {
+  font-size: 0.9rem;
+  color: var(--color-text-soft);
+  margin: 0;
+}
+
+/* Card */
+.card {
+  padding: 40px 24px;
+  border-top: 1px solid var(--color-line);
+  text-align: center;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+  margin: 0 0 24px;
+}
+
+.greeting {
+  font-size: 0.95rem;
+  line-height: 1.9;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.divider {
+  color: var(--color-accent);
+  font-size: 1.2rem;
+  margin: 24px 0;
+}
+
+.family-line {
+  font-size: 0.88rem;
+  color: var(--color-text-soft);
+  margin: 4px 0;
+}
+
+.family-line strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* D-Day */
+.dday-card {
+  background: #fbf3ef;
+}
+
+.dday-badge {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-accent);
+  padding: 8px 28px;
+  border-radius: 999px;
+  margin-bottom: 24px;
+  letter-spacing: 0.03em;
+}
+
+.countdown {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.count-unit {
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  padding: 12px 6px;
+  width: 68px;
+}
+
+.count-unit span {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.count-unit small {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--color-text-soft);
+  margin-top: 2px;
+  letter-spacing: 0.05em;
+}
+
+.dday-target {
+  margin-top: 20px;
+  font-size: 0.82rem;
+  color: var(--color-text-soft);
+}
+
+/* 오시는 길 */
+.venue-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
+.venue-address {
+  font-size: 0.85rem;
+  color: var(--color-text-soft);
+  margin: 0 0 20px;
+}
+
+.map-frame {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  margin-bottom: 16px;
+}
+
+.map-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.map-links {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.map-btn {
+  flex: 1;
+  display: block;
+  padding: 12px 4px;
+  border-radius: 10px;
+  background: var(--color-accent-soft);
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  transition: background 0.15s ease;
+}
+
+.map-btn:active {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.transport {
+  font-size: 0.8rem;
+  line-height: 1.8;
+  color: var(--color-text-soft);
+  text-align: left;
+  margin: 0;
+}
+
+/* Footer */
+.footer {
+  padding: 44px 24px 56px;
+  text-align: center;
+  border-top: 1px solid var(--color-line);
+}
+
+.footer p {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  color: var(--color-text-soft);
+}
+
+.footer-small {
+  font-size: 0.72rem !important;
+  opacity: 0.6;
+}
+
+/* Mobile fine-tuning */
+@media (max-width: 420px) {
+  .hero {
+    padding: 56px 20px 44px;
+  }
+  .hero-names {
+    font-size: 2.5rem;
+  }
+  .card {
+    padding: 32px 18px;
+  }
+  .count-unit {
+    width: 60px;
+    padding: 10px 4px;
+  }
+}
