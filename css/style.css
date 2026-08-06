@@ -1,17 +1,32 @@
 /* ==========================================================================
-   모바일 청첩장 — 무채색 + 비비드 한 색
-   벤치마크: Apple(대형 타이포·여백), 2000년대 Sony(무채색 위 오렌지 한 점),
-   Toss(숫자 위계·버튼)
+   모바일 청첩장 — 겨울 안개 위의 유리
+   벤치마크: Apple(대형 타이포·여백), Sony(무채색 위 색 한 점),
+   Toss(숫자 위계·버튼), 안도 다다오(빛과 재질)
+   색은 강원 영서의 겨울에서 채집했고, 색을 가진 것은 이끼 하나뿐이다.
    ========================================================================== */
 
 :root {
+  /* 영서의 겨울에서 채집한 색 */
+  --winter-haze: #eef1f2;
+  --ice-sheet: #dbe2e4;
+  --mountain-ink: #1c2325;
+  --moss: #4b6560;
+  --stone: #8a9296;
+
   --c-bg: #ffffff;
-  --c-surface: #f5f5f7;
-  --c-text: #0b0b0c;
-  --c-muted: #86868b;
-  --c-hairline: #e8e8ed;
-  --c-accent: #ff4e00;
-  --c-accent-hover: #d94200;
+  --c-surface: var(--winter-haze);
+  --c-text: var(--mountain-ink);
+  --c-muted: var(--stone);
+  --c-hairline: rgba(28, 35, 37, 0.12);
+  --c-accent: var(--moss);
+  --c-accent-hover: #354a46;
+
+  /* 유리 */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-strong: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-blur: blur(22px) saturate(150%);
+  --glass-shadow: 0 1px 1px rgba(28, 35, 37, 0.03), 0 8px 28px rgba(28, 35, 37, 0.06);
 
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
     "Apple SD Gothic Neo", "Segoe UI", Roboto, "Malgun Gothic", sans-serif;
@@ -24,19 +39,38 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: #ececf0;
+  background: var(--ice-sheet);
   color: var(--c-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 .page {
+  position: relative;
   max-width: 480px;
   min-height: 100vh;
   margin: 0 auto;
   background: var(--c-bg);
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 0 40px rgba(28, 35, 37, 0.08);
   overflow: hidden;
+}
+
+/* 안개 — 고정되어 있고 움직이지 않는다 */
+.page::before {
+  content: "";
+  position: absolute;
+  top: -12%;
+  left: -30%;
+  width: 160%;
+  height: 52%;
+  background: radial-gradient(circle at 50% 40%, var(--ice-sheet) 0%, transparent 68%);
+  filter: blur(60px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.page > * {
+  position: relative;
 }
 
 .demo-banner {
@@ -170,9 +204,12 @@ html, body {
 }
 
 .count-unit {
-  background: var(--c-bg);
-  border: 1px solid var(--c-hairline);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
+  box-shadow: var(--glass-shadow);
   padding: 14px 6px 12px;
   width: 72px;
 }
@@ -233,7 +270,7 @@ html, body {
   border: 0;
   display: block;
   /* 외부 지도의 색을 팔레트 안으로: 무채색 처리 */
-  filter: grayscale(1) contrast(1.02);
+  filter: grayscale(1) contrast(1.02) brightness(1.02);
 }
 
 .map-links {
@@ -246,8 +283,10 @@ html, body {
   flex: 1;
   padding: 13px 0;
   border-radius: 14px;
-  background: var(--c-surface);
-  border: 1px solid var(--c-hairline);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   color: var(--c-text);
   font-size: 0.88rem;
   font-weight: 700;
@@ -289,4 +328,12 @@ html, body {
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--c-muted);
+}
+
+/* backdrop-filter 미지원 브라우저 — 불투명도를 올려 가독성을 지킨다 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --glass-bg: rgba(255, 255, 255, 0.88);
+    --glass-bg-strong: rgba(255, 255, 255, 0.94);
+  }
 }
