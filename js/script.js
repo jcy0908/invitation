@@ -35,3 +35,14 @@ function updateCountdown() {
 
 updateCountdown();
 setInterval(updateCountdown, 1000);
+
+// ==========================================================================
+// Fluid — 누르는 즉시 반응한다 (Apple, Designing Fluid Interfaces §1)
+// click을 기다리면 죽은 것처럼 느껴진다.
+// ==========================================================================
+document.querySelectorAll('.map-btn').forEach((el) => {
+  el.addEventListener('pointerdown', () => el.classList.add('is-pressed'));
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach((evt) =>
+    el.addEventListener(evt, () => el.classList.remove('is-pressed'))
+  );
+});

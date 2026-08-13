@@ -337,3 +337,47 @@ html, body {
     --glass-bg-strong: rgba(255, 255, 255, 0.94);
   }
 }
+
+/* ==========================================================================
+   Fluid — 반응·접근성 (Apple, Designing Fluid Interfaces)
+   ========================================================================== */
+
+.map-btn {
+  touch-action: manipulation; /* 300ms 탭 지연 제거 */
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease-out;
+}
+
+.map-btn.is-pressed {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+
+  .map-btn.is-pressed {
+    transform: none;
+  }
+}
+
+/* 투명도를 줄이고 싶은 사용자 — 유리를 걷어낸다 */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-bg: #ffffff;
+    --glass-bg-strong: #ffffff;
+    --glass-blur: none;
+  }
+
+  .page::before {
+    display: none;
+  }
+}
+
+/* 대비를 높이고 싶은 사용자 — 경계를 분명히 */
+@media (prefers-contrast: more) {
+  :root {
+    --glass-border: var(--c-text);
+    --c-muted: #4a5457;
+  }
+}
