@@ -15,8 +15,11 @@
   --line: rgba(27, 27, 27, 0.22);
   --line-soft: rgba(27, 27, 27, 0.11);
   --serif: "Noto Serif KR", "Iowan Old Style", "AppleMyungjo", "Batang", serif;
-  --sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
-    "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Apple SD Gothic Neo",
+    "Pretendard Variable", Pretendard, "Segoe UI", sans-serif;
+  --chrome-height: 3.5rem;
+  --hero-drift: 0px;
+  --hero-fade: 1;
 }
 
 *,
@@ -44,6 +47,10 @@ body {
   overflow-wrap: break-word;
 }
 
+section[id] {
+  scroll-margin-top: calc(var(--chrome-height) + 1rem);
+}
+
 a {
   color: inherit;
 }
@@ -68,6 +75,122 @@ a {
 
 .skip-link:focus {
   transform: translateY(0);
+}
+
+/* Floating navigation: a thin functional layer, not a second visual theme. */
+
+.invitation-chrome {
+  position: fixed;
+  z-index: 40;
+  top: 0;
+  left: 50%;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  width: min(100%, 760px);
+  min-height: var(--chrome-height);
+  padding: 0.45rem clamp(1rem, 5vw, 2rem);
+  background: rgba(242, 239, 229, 0.76);
+  box-shadow: 0 1px 0 rgba(27, 27, 27, 0.08);
+  backdrop-filter: blur(22px) saturate(155%);
+  -webkit-backdrop-filter: blur(22px) saturate(155%);
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -0.6rem);
+  transition:
+    opacity 260ms ease,
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 380ms;
+}
+
+.invitation-chrome.is-visible,
+.invitation-chrome:focus-within,
+.no-js .invitation-chrome {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+  transition-delay: 0s;
+}
+
+.no-js .invitation-chrome {
+  position: sticky;
+  left: auto;
+  margin-inline: auto;
+  transform: none;
+}
+
+.chrome-title {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.chrome-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: clamp(0.8rem, 4vw, 1.5rem);
+}
+
+.chrome-nav a {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.5rem 0.05rem;
+  color: var(--ink-soft);
+  font-size: 0.69rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: color 160ms ease, transform 100ms ease-out;
+}
+
+.chrome-nav a:hover,
+.chrome-nav a:focus-visible,
+.chrome-nav a[aria-current="true"] {
+  color: var(--ink);
+}
+
+.chrome-nav a:active {
+  transform: scale(0.96);
+}
+
+.chrome-title:focus-visible,
+.chrome-nav a:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.scroll-progress {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  overflow: hidden;
+}
+
+.scroll-progress > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--amber);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
 }
 
 .page {
@@ -146,15 +269,18 @@ a {
 
 .hero-name {
   display: block;
+  will-change: transform;
 }
 
 .hero-name--groom {
   justify-self: start;
+  transform: translate3d(calc(0px - var(--hero-drift)), 0, 0);
 }
 
 .hero-name--bride {
   justify-self: end;
   padding-right: 0.17em;
+  transform: translate3d(var(--hero-drift), 0, 0);
 }
 
 .hero-names .amp {
@@ -177,6 +303,8 @@ a {
   margin: 0;
   padding-top: 1.15rem;
   border-top: 1px solid var(--line);
+  opacity: var(--hero-fade);
+  will-change: opacity;
 }
 
 .hero-date,
@@ -337,6 +465,21 @@ a {
   text-align: right;
 }
 
+.countdown-fallback {
+  margin: 0;
+  padding-block: 1rem;
+  border-block: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  line-height: 1.65;
+  text-align: center;
+}
+
+.no-js .dday-badge,
+.no-js .countdown {
+  display: none;
+}
+
 /* Location */
 
 .location-body {
@@ -383,7 +526,7 @@ a {
 
 .map-links {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   margin: 0;
   border-bottom: 1px solid var(--line);
 }
@@ -407,6 +550,14 @@ a {
 
 .map-btn + .map-btn {
   border-left: 1px solid var(--line-soft);
+}
+
+.map-btn:nth-child(3) {
+  border-left: 0;
+}
+
+.map-btn:nth-child(n + 3) {
+  border-top: 1px solid var(--line-soft);
 }
 
 .map-btn:hover,
@@ -481,6 +632,18 @@ a {
 }
 
 @media (min-width: 620px) {
+  .map-links {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .map-btn:nth-child(3) {
+    border-left: 1px solid var(--line-soft);
+  }
+
+  .map-btn:nth-child(n + 3) {
+    border-top: 0;
+  }
+
   .hero-meta {
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
@@ -569,6 +732,19 @@ a {
   .map-btn.is-pressed {
     transform: none;
   }
+
+  .hero-name--groom,
+  .hero-name--bride {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .invitation-chrome {
+    background: var(--paper);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
 
 @media (prefers-contrast: more) {
@@ -595,7 +771,8 @@ a {
   }
 
   .map-links,
-  .demo-banner {
+  .demo-banner,
+  .invitation-chrome {
     display: none;
   }
 
