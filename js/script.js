@@ -1,49 +1,47 @@
+// 청첩장 — D-day와 남은 시간.
+//
+// 날짜 계산은 C++로 쓰여 WebAssembly로 빌드된 모듈(js/dday.wasm, 595B)이
+// 맡습니다. 받지 못하면 같은 API의 JS 구현(js/dday.js)으로 되돌아갑니다.
+//
+// 왜 옮겼는가: 예전에는 남은 '경과 시간'으로 D-day를 만들어서 같은 날짜라도
+// 시각에 따라 답이 달라졌습니다. 13시 예식이면 당일 오전에 D-001이 뜨고
+// (D-DAY여야 합니다) 하루 전 오전에는 D-002가 떴습니다(D-1이어야 합니다).
+// D-day는 시간의 뺄셈이 아니라 달력 날짜의 뺄셈입니다.
+//
+// 두 구현이 같은 값을 낸다는 것은 tools/dday_equivalence.mjs가 확인합니다 —
+// 6개 시간대 × 20,464개 시각, 122,784건.
+
+let dday;
+let ddayEngine = 'JavaScript';
+try {
+  dday = await import('./dday-wasm.js');
+  await dday.loadDdayWasm();
+  ddayEngine = 'WebAssembly (C++)';
+} catch (err) {
+  dday = await import('./dday.js');
+}
+console.info(`청첩장 — 날짜 계산: ${ddayEngine}`);
+
 // 샘플 행사 일시 (실제 배포 시 교체)
-const EVENT_DATE = new Date('2026-10-17T13:00:00+09:00');
-const EVENT_DAY_END = new Date('2026-10-18T00:00:00+09:00');
-const padNumber = (value) => String(value).padStart(2, '0');
+const EVENT_SEC = Date.parse('2026-10-17T13:00:00+09:00') / 1000;
+const KST_OFFSET_MINUTES = 540;
 
 const ddayBadge = document.getElementById('dday-badge');
 const daysEl = document.getElementById('cd-days');
 const hoursEl = document.getElementById('cd-hours');
 const minutesEl = document.getElementById('cd-minutes');
 const secondsEl = document.getElementById('cd-seconds');
-const countdownEl = document.getElementById('countdown');
+
+const pad2 = (n) => String(n).padStart(2, '0');
 
 function updateCountdown() {
-  const now = new Date();
-  const diff = EVENT_DATE - now;
+  const r = dday.compute(Date.now() / 1000, EVENT_SEC, KST_OFFSET_MINUTES);
 
-  if (diff <= 0) {
-    const isEventDay = now < EVENT_DAY_END;
-    ddayBadge.textContent = isEventDay ? 'D-DAY' : '종료';
-    daysEl.textContent = '00';
-    hoursEl.textContent = '00';
-    minutesEl.textContent = '00';
-    secondsEl.textContent = '00';
-    countdownEl.setAttribute(
-      'aria-label',
-      isEventDay ? '오늘은 결혼식 날입니다' : '결혼식이 종료되었습니다'
-    );
-    return;
-  }
-
-  const totalSeconds = Math.floor(diff / 1000);
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  const dday = Math.ceil(diff / 86400000);
-  ddayBadge.textContent = `D-${String(dday).padStart(3, '0')}`;
-  daysEl.textContent = padNumber(days);
-  hoursEl.textContent = padNumber(hours);
-  minutesEl.textContent = padNumber(minutes);
-  secondsEl.textContent = padNumber(seconds);
-  countdownEl.setAttribute(
-    'aria-label',
-    `결혼식까지 ${days}일 ${hours}시간 ${minutes}분 ${seconds}초 남았습니다`
-  );
+  ddayBadge.textContent = dday.label(r);
+  daysEl.textContent = pad2(r.days);
+  hoursEl.textContent = pad2(r.hours);
+  minutesEl.textContent = pad2(r.minutes);
+  secondsEl.textContent = pad2(r.seconds);
 }
 
 updateCountdown();
